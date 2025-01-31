@@ -1,0 +1,16 @@
+<app-navbar btnEdit="add"></app-navbar>
+<div class="container mt-2 pt-5">
+  <div class="row ">
+    @for (serie of series; track serie._id){
+        <div class="col-md-4" routerLink="/detalle/{{serie._id}}">
+          <h4 class="text-center"><strong>a</strong></h4>
+          <hr>
+          <div class="profile-card-2">
+            <img src="{{serie.imagenes[0]}}" class="imgSize">
+            <div class="profile-name">{{serie.titulo}}</div>
+            <div class="profile-username"></div>
+          </div>
+        </div>
+    }
+  </div>
+</div>

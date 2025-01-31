@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top bg-black">
+  <div class="container">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item active me-2">
+          <a class="nav-link text-light" href="">Home</a>
+        </li>
+        @if (btnEdit() === "add"){
+          <li class="nav-item">
+            <button class="btn btn-outline-success">Añadir Serie</button>
+          </li>
+        } @else {
+          <li class="nav-item">
+            <button class="btn btn-outline-success">Editar Serie</button>
+          </li>
+          <li>
+            <button class="btn btn-danger ms-4" (click)="borrarSerie()">Borrar Serie</button>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,143 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="miModalLabel">
+        {{ editar ? 'Editar Serie' : 'Añadir Serie' }}</h5>
+      <button type="button"
+              class="btn-close" (click)="activeModal.dismiss()"
+              aria-label="Close"></button>
+
+    </div>
+    <div class="modal-body">
+
+      <form [formGroup]="formSerie" (ngSubmit)="onSubmit()">
+
+        <div class="form-floating mb-3">
+          <input formControlName="titulo"
+                 type="text" class="form-control"
+                 id="titulo"
+                 placeholder="Titulo">
+          <label for="titulo">Titulo</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input formControlName="numeroCapitulos"
+
+                 type="number" class="form-control"
+                 id="numeroCapitulos"
+                 placeholder="Numero Capitulos">
+
+          <label for="numeroCapitulos">Numero Capitulos</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input formControlName="sinopsis"
+                 type="text" class="form-control"
+                 id="sinopsis"
+                 placeholder="Sinopsis">
+          <label for="sinopsis">
+            Sinopsis</label>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="form-floating mb-3">
+              <input formControlName="poster"
+                     type="text" class="form-control"
+                     id="poster"
+                     placeholder="Poster">
+              <label for="poster">
+                Poster</label>
+            </div>
+
+          </div>
+          <div class="col-4">
+            <img src="{{'images/no-image-icon.png'}}" class="img-fluid" alt="...">
+          </div>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+                  <textarea formControlName="plot"
+                            rows="7"
+                            class="form-control"
+                            id="plot">
+                  </textarea>
+          <label for="plot">
+            Plot</label>
+        </div>
+        <!-- select genres -->
+        @if(editar){
+          <div>
+            <label for="Select">Genres</label>
+            <select class="form-select" id="Select"
+                    aria-label="Genres" multiple
+                    formControlName="genres">
+              @for (gen of genres;track $index){
+                <option [value]="gen">{{ gen }}</option>
+              }
+            </select>
+          </div>
+        } @else {
+          <div>
+            <label for="newSelect">Genres</label>
+            <select class="form-select" id="newSelect"
+                    aria-label="Genres" multiple
+                    formControlName="genres">
+              @for (gen of genres; track $index){
+                <option [value]="gen">{{ gen }}</option>
+              }
+            </select>
+          </div>
+        }
+
+
+        <!-- Add New Genre -->
+        <div class="row mt-3">
+          <div class="col-8">
+            <div [formGroup]="myNewGenre" class="form-floating mb-3">
+              <input
+                type="text" class="form-control"
+                id="newGenre"
+                formControlName="newGenre"
+                placeholder="New Genre">
+              <label for="newGenre">
+                New Genre</label>
+            </div>
+
+          </div>
+          <div class="col-4 pt-2">
+
+            <h3><fa-icon [icon]="faPlusCircle" class="pointer text-success" (click)="addNewGenre(newGenre.value)"></fa-icon></h3>
+
+          </div>
+        </div>
+
+        <fieldset formGroupName="imdb">
+          <legend>IMDB</legend>
+          <div class="form-floating mb-3">
+            <input formControlName="rating"
+                   type="number" class="form-control"
+                   id="rating"
+                   placeholder="Rating">
+            <label for="rating">
+              Rating</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input formControlName="votes"
+                   type="number" class="form-control"
+                   id="votes"
+                   placeholder="Votes">
+            <label for="votes">
+
+              Votes</label>
+          </div>
+        </fieldset>
+
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Close
+      </button>
+      <button type="submit"  class="btn btn-primary" (click)="onSubmit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+

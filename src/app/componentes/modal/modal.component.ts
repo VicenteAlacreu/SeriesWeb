@@ -90,6 +90,13 @@ export class ModalComponent {
       return;
     }
 
+    const formValue = this.formSerie.getRawValue();
+    formValue.categorias = formValue.categorias.map((cat: any) => ({
+      _id: cat.selectedCategory,
+      nombre: cat.nombre,
+      imagen: cat.imagen,
+    }));
+
     if(this.editar){
       this.data.updateSerie(this.formSerie.getRawValue()).subscribe(
         {
@@ -106,7 +113,7 @@ export class ModalComponent {
         }
       )
     }else {
-      this.data.addSerie(this.formSerie.getRawValue()).subscribe(
+      this.data.addSerie(formValue).subscribe(
         {
           next: value => {
             console.log(value);
@@ -122,7 +129,7 @@ export class ModalComponent {
         }
       )
     }
-
+    console.log(this.formSerie.getRawValue());
 
 
   }
@@ -166,10 +173,10 @@ export class ModalComponent {
       if (selectedCategory) {
         this.categoriasF.controls[index].patchValue({
           nombre: selectedCategory.nombre,
-
           imagen: selectedCategory.imagen,
           _id: selectedCategory._id
         });
+        console.log(selectedCategory);
       }
     } else {
 // Limpiamos los campos si no se selecciona nada

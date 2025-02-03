@@ -1,6 +1,8 @@
 import {Component, inject, model, ModelSignal} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SeriesService} from "../../services/series.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {ModalComponent} from "../modal/modal.component";
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +16,7 @@ export class NavbarComponent {
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly data: SeriesService = inject(SeriesService);
   private readonly router: Router = inject(Router);
+  private readonly modalService: NgbModal = inject(NgbModal);
 
   constructor() {
 
@@ -32,6 +35,17 @@ export class NavbarComponent {
         this.router.navigateByUrl('/inicio')
       }
     })
+  }
+
+  addModal(){
+    const modalRef = this.modalService.open(ModalComponent);
+    modalRef.componentInstance.editar = false;
+  }
+
+  editModal(){
+    const modalRef = this.modalService.open(ModalComponent);
+    modalRef.componentInstance.editar = true;
+    modalRef.componentInstance.id = this.route.snapshot.params['id'];
   }
 
 }

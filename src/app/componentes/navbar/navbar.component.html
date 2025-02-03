@@ -10,11 +10,11 @@
         </li>
         @if (btnEdit() === "add"){
           <li class="nav-item">
-            <button class="btn btn-outline-success">Añadir Serie</button>
+            <button class="btn btn-outline-success" (click)="addModal()">Añadir Serie</button>
           </li>
         } @else {
           <li class="nav-item">
-            <button class="btn btn-outline-success">Editar Serie</button>
+            <button class="btn btn-outline-success" (click)="editModal()">Editar Serie</button>
           </li>
           <li>
             <button class="btn btn-danger ms-4" (click)="borrarSerie()">Borrar Serie</button>

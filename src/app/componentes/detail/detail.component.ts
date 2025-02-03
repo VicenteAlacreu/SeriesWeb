@@ -3,12 +3,14 @@ import {SeriesService} from "../../services/series.service";
 import {Serie} from "../../common/series";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NavbarComponent} from "../navbar/navbar.component";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-detail',
   standalone: true,
   imports: [
-    NavbarComponent
+    NavbarComponent,
+    NgClass
   ],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.css'

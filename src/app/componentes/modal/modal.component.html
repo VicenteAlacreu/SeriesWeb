@@ -29,113 +29,66 @@
           <label for="numeroCapitulos">Numero Capitulos</label>
         </div>
         <div class="form-floating mb-3">
-          <input formControlName="sinopsis"
+          <input formControlName="fechaEmision"
+                 type="date" class="form-control"
+                 id="fechaEmision"
+                 placeholder="Fecha Emision">
+          <label for="fechaEmision">
+            Fecha Emision</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input formControlName="imagenes"
                  type="text" class="form-control"
-                 id="sinopsis"
-                 placeholder="Sinopsis">
+                 id="imagenes"
+                 placeholder="Imagen">
+          <label for="imagenes">
+            Imagenes</label>
+        </div>
+        <div formArrayName="categorias">
+          @for (cat of categoriasF.controls; track $index){
+            <div [formGroupName]="$index"  class="form-floating">
+              <div class="row">
+                <div class="col-md-8">
+                  <select id="select" class="form-select"
+                          (change)="onCategoryChange($index)"
+                          (select)="onCategoryChange($index)"
+                          formControlName="selectedCategory">
+                    <option [ngValue]="null" disabled>Selecciona una categoría</option>
+                    @for (option of categorias; track option._id){
+                      <option [ngValue]="option._id" >{{option.nombre}}</option>
+                    }
+                  </select>
+                  <label for="select">Categoria</label>
+                </div>
+                <div class="col-md-2">
+                  <button type="button" class="btn bg-danger text-light" (click)="removeCategoria($index)">Eliminar</button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="d-flex">
+          <button type="button" class="btn btn-primary" (click)="addNewCategoria()">
+            Agregar categoría
+          </button>
+        </div>
+
+        <div class="form-floating mb-3 mt-3">
+                  <textarea formControlName="sinopsis"
+                            type="date"
+                            class="form-control"
+                            id="sinopsis">
+                  </textarea>
           <label for="sinopsis">
             Sinopsis</label>
         </div>
-        <div class="row">
-          <div class="col-8">
-            <div class="form-floating mb-3">
-              <input formControlName="poster"
-                     type="text" class="form-control"
-                     id="poster"
-                     placeholder="Poster">
-              <label for="poster">
-                Poster</label>
-            </div>
-
-          </div>
-          <div class="col-4">
-            <img src="{{'images/no-image-icon.png'}}" class="img-fluid" alt="...">
-          </div>
-        </div>
-        <div class="form-floating mb-3 mt-3">
-                  <textarea formControlName="plot"
-                            rows="7"
-                            class="form-control"
-                            id="plot">
-                  </textarea>
-          <label for="plot">
-            Plot</label>
-        </div>
-        <!-- select genres -->
-        @if(editar){
-          <div>
-            <label for="Select">Genres</label>
-            <select class="form-select" id="Select"
-                    aria-label="Genres" multiple
-                    formControlName="genres">
-              @for (gen of genres;track $index){
-                <option [value]="gen">{{ gen }}</option>
-              }
-            </select>
-          </div>
-        } @else {
-          <div>
-            <label for="newSelect">Genres</label>
-            <select class="form-select" id="newSelect"
-                    aria-label="Genres" multiple
-                    formControlName="genres">
-              @for (gen of genres; track $index){
-                <option [value]="gen">{{ gen }}</option>
-              }
-            </select>
-          </div>
-        }
-
-
-        <!-- Add New Genre -->
-        <div class="row mt-3">
-          <div class="col-8">
-            <div [formGroup]="myNewGenre" class="form-floating mb-3">
-              <input
-                type="text" class="form-control"
-                id="newGenre"
-                formControlName="newGenre"
-                placeholder="New Genre">
-              <label for="newGenre">
-                New Genre</label>
-            </div>
-
-          </div>
-          <div class="col-4 pt-2">
-
-            <h3><fa-icon [icon]="faPlusCircle" class="pointer text-success" (click)="addNewGenre(newGenre.value)"></fa-icon></h3>
-
-          </div>
-        </div>
-
-        <fieldset formGroupName="imdb">
-          <legend>IMDB</legend>
-          <div class="form-floating mb-3">
-            <input formControlName="rating"
-                   type="number" class="form-control"
-                   id="rating"
-                   placeholder="Rating">
-            <label for="rating">
-              Rating</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input formControlName="votes"
-                   type="number" class="form-control"
-                   id="votes"
-                   placeholder="Votes">
-            <label for="votes">
-
-              Votes</label>
-          </div>
-        </fieldset>
-
       </form>
 
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Close
+      <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Cancelar
       </button>
-      <button type="submit"  class="btn btn-primary" (click)="onSubmit()">Save changes</button>
+      <button type="submit"  class="btn btn-primary" (click)="onSubmit()">{{editar? 'Guardar Cambios' : 'Añadir Serie'}} </button>
     </div>
   </div>
 </div>

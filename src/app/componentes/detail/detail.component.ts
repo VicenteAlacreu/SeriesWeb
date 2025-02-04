@@ -35,6 +35,13 @@ export class DetailComponent {
     this.data.getSerieById(id).subscribe({
       next: value =>{
         this.serie = value.data;
+        const fecha = new Date(value.data.fechaEmision)
+        const anio = fecha.getFullYear();
+        const mes = (fecha.getMonth()).toString().padStart(2, '0');
+        const dia = fecha.getDate().toString().padStart(2, '0');
+
+        const formato = `${anio}-${mes}-${dia}`;
+        value.data.fechaEmision = formato;
       },
       error: err => {
         console.error(err.message)

@@ -45,38 +45,69 @@
             Imagenes</label>
         </div>
         <div formArrayName="categorias">
-          @for (cat of categoriasF.controls; track $index){
-            <div [formGroupName]="$index"  class="form-floating">
+          @for (cat of categoriasF.controls; track $index) {
+            <div [formGroupName]="$index" class="form-floating">
               <div class="row">
                 <div class="col-md-8">
-                  <select id="select" class="form-select"
+                  <select id="select"
+                          class="form-select"
                           (change)="onCategoryChange($index)"
-                          (select)="onCategoryChange($index)"
-                          formControlName="selectedCategorias">
+                          formControlName="selectedCategory">
                     <option [ngValue]="null" disabled>Selecciona una categoría</option>
-                    @for (option of categorias; track option._id){
-                      <option [ngValue]="option._id" >{{option.nombre}}</option>
+                    @for (option of categorias; track option._id) {
+                      <option [ngValue]="option._id">{{ option.nombre }}</option>
                     }
                   </select>
-                  <label for="select">Categoria</label>
+                  <label for="select">Categoría</label>
                 </div>
                 <div class="col-md-2">
-                  <button type="button" class="btn bg-danger text-light" (click)="removeCategoria($index)">Eliminar</button>
+                  <button type="button"
+                          class="btn bg-danger text-light"
+                          (click)="removeCategoria($index)">
+                    Eliminar
+                  </button>
                 </div>
               </div>
             </div>
           }
         </div>
-        <div class="d-flex  ">
-          <button type="button" class="btn btn-primary" (click)="addNewCategoria()">
+        <div class="d-flex justify-content-between mb-3">
+          <button type="button" class="btn btn-primary" (click)="addCategoria()">
             Agregar categoría
           </button>
+          <button type="button" class="btn btn-secondary ms-2" (click)="showNewCategoryForm = !showNewCategoryForm">
+            Nueva categoría
+          </button>
         </div>
-
+        @if (showNewCategoryForm) {
+          <div class="border p-3 mt-3">
+            <form [formGroup]="formNuevaCategoria">
+              <div class="form-floating mb-2">
+                <input formControlName="newCategoryName"
+                       type="text"
+                       class="form-control"
+                       placeholder="Nombre de la categoría">
+                <label>Nombre de la Nueva Categoría</label>
+              </div>
+              <div class="form-floating mb-2">
+                <input formControlName="newCategoryImage"
+                       type="text"
+                       class="form-control"
+                       placeholder="URL de la imagen">
+                <label>URL Imagen</label>
+              </div>
+              <button type="button"
+                      class="btn btn-success"
+                      (click)="guardarNuevaCategoria()">
+                Guardar Nueva Categoría
+              </button>
+            </form>
+          </div>
+        }
 
         <div class="form-floating mb-3 mt-3">
                   <textarea formControlName="sinopsis"
-                            type="date"
+                            type="text"
                             class="form-control"
                             id="sinopsis">
                   </textarea>

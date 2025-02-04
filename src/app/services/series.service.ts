@@ -22,10 +22,6 @@ export class SeriesService {
     return this.http.get<SeriesApi>(environment.urlApi + 'categorias/list');
   }
 
-  public getSeriesByCategoria(cat: string): Observable<SeriesApi> {
-    return this.http.get<SeriesApi>(environment.urlApi + 'categorias?c=' + cat);
-  }
-
   public addSerie(serie: Serie): Observable<ApiResponseMessage>{
     return this.http.post<ApiResponseMessage>(environment.urlApi, serie);
   }

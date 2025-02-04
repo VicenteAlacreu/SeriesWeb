@@ -31,13 +31,13 @@
     </div>
 
     <div class="row mb-4">
-      <div class="col-2">
+      <div class="col-md-6">
         <h3>Categorías:</h3>
-        <ul class="list-group">
+        <div class="row">
           @for (cat of serie.categorias; track $index){
-            <li class="list-group-item text-center ">{{cat.nombre}}</li>
+            <p class="col-md-4 bg-light text-dark rounded-5 text-center ms-3">{{cat.nombre}}</p>
           }
-        </ul>
+        </div>
       </div>
     </div>
 

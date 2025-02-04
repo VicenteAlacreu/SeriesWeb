@@ -52,7 +52,7 @@
                   <select id="select" class="form-select"
                           (change)="onCategoryChange($index)"
                           (select)="onCategoryChange($index)"
-                          formControlName="selectedCategory">
+                          formControlName="selectedCategorias">
                     <option [ngValue]="null" disabled>Selecciona una categoría</option>
                     @for (option of categorias; track option._id){
                       <option [ngValue]="option._id" >{{option.nombre}}</option>
@@ -67,11 +67,12 @@
             </div>
           }
         </div>
-        <div class="d-flex">
+        <div class="d-flex  ">
           <button type="button" class="btn btn-primary" (click)="addNewCategoria()">
             Agregar categoría
           </button>
         </div>
+
 
         <div class="form-floating mb-3 mt-3">
                   <textarea formControlName="sinopsis"

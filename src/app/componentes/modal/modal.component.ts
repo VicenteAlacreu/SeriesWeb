@@ -1,10 +1,19 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {SeriesService} from "../../services/series.service";
-import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
 import {Categoria} from "../../common/series";
 import {FormValidators} from "../../validators/FormValidators";
 import {Router} from "@angular/router";
+import {formatDate} from "@angular/common";
 
 
 @Component({
@@ -16,21 +25,22 @@ import {Router} from "@angular/router";
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.css'
 })
-export class ModalComponent {
+export class ModalComponent implements OnInit{
   //servicios
   private readonly data: SeriesService = inject(SeriesService);
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
 
   //Variables externas
   @Input({required: true}) editar!: boolean;
-  @Input({required: false}) id!: string;
+  @Input({required: false}) idSerie!: string;
+
   //Variables
   activeModal = inject(NgbActiveModal);
   categorias: Categoria[] = [];
 
 
   formSerie: FormGroup = this.formBuilder.group({
-    _id: [''],
+    _id: [],
     titulo: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255), FormValidators.notOnlyWhiteSpace]],
     sinopsis: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255), FormValidators.notOnlyWhiteSpace]],
     fechaEmision: ['', [Validators.required]],
@@ -75,12 +85,14 @@ export class ModalComponent {
     return this.myNewCategoria.get('selectedCategorias');
   }
 
+  ngOnInit() {
+    this.cargarCategorias();
+      this.cargarSerie();
+  }
+
   //logica
   constructor() {
     this.addNewCategoria();
-    this.cargarCategorias();
-    this.cargarSerie();
-    console.log(this.categoriasF.value);
   }
 
 
@@ -91,6 +103,7 @@ export class ModalComponent {
     }
 
     const formValue = this.formSerie.getRawValue();
+    console.log(formValue)
     formValue.categorias = formValue.categorias.map((cat: any) => ({
       _id: cat.selectedCategory,
       nombre: cat.nombre,
@@ -98,7 +111,7 @@ export class ModalComponent {
     }));
 
     if(this.editar){
-      this.data.updateSerie(this.formSerie.getRawValue()).subscribe(
+      this.data.updateSerie(formValue).subscribe(
         {
           next: value => {
             console.log(value);
@@ -121,7 +134,6 @@ export class ModalComponent {
           complete: () => {
             console.log('Movie added');
             this.activeModal.dismiss();
-
             },
           error: err => {
             console.error(err);
@@ -130,8 +142,6 @@ export class ModalComponent {
       )
     }
     console.log(this.formSerie.getRawValue());
-
-
   }
 
   private cargarCategorias() {
@@ -157,6 +167,8 @@ export class ModalComponent {
 
     this.categoriasF.push(categoriaForm);
 
+
+
   }
 
   removeCategoria(i: number){
@@ -176,10 +188,9 @@ export class ModalComponent {
           imagen: selectedCategory.imagen,
           _id: selectedCategory._id
         });
-        console.log(selectedCategory);
       }
     } else {
-// Limpiamos los campos si no se selecciona nada
+      // Limpiamos los campos si no se selecciona nada
       this.categoriasF.controls[index].patchValue({
         nombre: '',
         imagen: '',
@@ -189,11 +200,24 @@ export class ModalComponent {
   }
 
   private cargarSerie() {
-    if (this.id){
-      this.editar = true;
-      this.data.getSerieById(this.id).subscribe({
+    if (this.idSerie){
+      this.data.getSerieById(this.idSerie).subscribe({
         next: value => {
-          this.formSerie.setValue(value.data);
+          const fecha = new Date(value.data.fechaEmision)
+          const anio = fecha.getFullYear();
+          const mes = (fecha.getMonth()).toString().padStart(2, '0');
+          const dia = fecha.getDate().toString().padStart(2, '0');
+
+          const formato = `${anio}-${mes}-${dia}`;
+          value.data.fechaEmision = formato;
+          this.formSerie.patchValue(value.data);
+
+          const data = value.data.categorias;
+          const dataFA = new FormArray<any>([]);
+
+          data.forEach(dat => dataFA.push(new FormControl(dat)))
+          this.formSerie.setControl('categorias',dataFA);
+          console.log(this.formSerie.getRawValue())
         },
         error: err => {
           console.error(err);
@@ -201,9 +225,8 @@ export class ModalComponent {
         complete: () => {
           console.log('Serie cargada');
         }
-      })
+      });
     } else {
-      this.editar = false;
       this.formSerie.reset();
     }
   }

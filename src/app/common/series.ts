@@ -19,7 +19,7 @@ export interface Serie {
   titulo: string;
   categorias: Categoria[];
   numeroCapitulos: number;
-  fechaEmision: string;
+  fechaEmision: any;
   sinopsis: string;
 }
 

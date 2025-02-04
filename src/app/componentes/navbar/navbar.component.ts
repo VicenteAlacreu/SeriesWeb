@@ -13,18 +13,20 @@ import {ModalComponent} from "../modal/modal.component";
 })
 export class NavbarComponent {
   btnEdit: ModelSignal<string> = model.required()
-  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   private readonly data: SeriesService = inject(SeriesService);
   private readonly router: Router = inject(Router);
   private readonly modalService: NgbModal = inject(NgbModal);
 
-  constructor() {
+  private id = '';
 
+  constructor() {
+    this.id = this.activatedRoute.snapshot.params['id'];
   }
 
   borrarSerie(){
-    const id = this.route.snapshot.params['id'];
-    this.data.deleteSerie(id).subscribe({
+
+    this.data.deleteSerie(this.id).subscribe({
       next: () => {
         console.log('Serie deleted!');
       },
@@ -37,15 +39,19 @@ export class NavbarComponent {
     })
   }
 
+  editModal(){
+    const modalRef = this.modalService.open(ModalComponent);
+    modalRef.componentInstance.editar = true;
+    const ids: string = this.activatedRoute.snapshot.params['id'];
+    modalRef.componentInstance.idSerie = ids;
+
+  }
+
   addModal(){
     const modalRef = this.modalService.open(ModalComponent);
     modalRef.componentInstance.editar = false;
   }
 
-  editModal(){
-    const modalRef = this.modalService.open(ModalComponent);
-    modalRef.componentInstance.editar = true;
-    modalRef.componentInstance.id = this.route.snapshot.params['id'];
-  }
+
 
 }

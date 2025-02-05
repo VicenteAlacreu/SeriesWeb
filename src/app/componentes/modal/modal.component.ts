@@ -47,7 +47,7 @@ export class ModalComponent implements OnInit{
     sinopsis: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255), FormValidators.notOnlyWhiteSpace]],
     fechaEmision: ['', [Validators.required]],
     numeroCapitulos: [0, Validators.required],
-    imagenes: [],
+    imagenes: this.formBuilder.array([]),
     categorias: this.formBuilder.array([])
   });
 
@@ -90,6 +90,9 @@ export class ModalComponent implements OnInit{
   get newCategoryImage(): any{
     return this.formNuevaCategoria.get('newCategoryImage');
   }
+  get imagenesF(): FormArray{
+    return this.formSerie.get('imagenes') as FormArray;
+  }
 
   ngOnInit() {
     this.cargarCategorias();
@@ -105,17 +108,33 @@ export class ModalComponent implements OnInit{
   onSubmit() {
     if (this.formSerie.invalid) {
       console.error('Formulario Inválido');
+
+      // Imprime los errores de cada control
+      Object.keys(this.formSerie.controls).forEach(key => {
+        const control = this.formSerie.get(key);
+        if (control?.errors) {
+          console.log(`Errores en el control "${key}":`, control.errors);
+        }
+      });
+
       return;
     }
 
     const formValue = this.formSerie.getRawValue();
 
-    // Mapea las categorías correctamente
+
     formValue.categorias = formValue.categorias.map((cat: any) => ({
-      _id: cat._id,
       nombre: cat.nombre,
       imagen: cat.imagen
     }));
+
+
+    formValue.imagenes = formValue.imagenes.map((img: any) => img.url);
+
+    // Formatea la fecha en formato ISO
+    formValue.fechaEmision = new Date(formValue.fechaEmision).toISOString();
+
+    console.log('JSON a enviar:', formValue);
 
     if (this.editar) {
       this.data.updateSerie(formValue).subscribe({
@@ -127,7 +146,7 @@ export class ModalComponent implements OnInit{
           this.activeModal.dismiss();
         },
         error: err => {
-          console.error(err);
+          console.error('Error al actualizar:', err);
         }
       });
     } else {
@@ -136,32 +155,18 @@ export class ModalComponent implements OnInit{
           console.log(value);
         },
         complete: () => {
-          console.log('Movie added');
+          console.log('Serie añadida');
           this.activeModal.dismiss();
         },
         error: err => {
-          console.error(err);
+          console.error('Error al añadir:', err);
         }
       });
     }
-
-    console.log(this.formSerie.getRawValue());
   }
 
-  private cargarCategorias() {
-    this.data.getCategorias().subscribe({
-      next: value => {
-        this.categorias = value.data;
-      },
-      error: err => {
-        console.error(err);
-      },
-      complete: () => {
-        console.log('Categorias cargadas ' + this.categorias.length);
-      }
-    })
-  }
 
+  //Logica categorias
   addCategoria() {
     const categoriaForm = this.formBuilder.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
@@ -170,11 +175,6 @@ export class ModalComponent implements OnInit{
     });
     this.categoriasF.push(categoriaForm);
   }
-
-  removeCategoria(i: number){
-    this.categoriasF.removeAt(i);
-  }
-
   onCategoryChange(index: number) {
     const selectedCategoryId = this.categoriasF.controls[index].get('selectedCategory')?.value;
 
@@ -197,7 +197,6 @@ export class ModalComponent implements OnInit{
       });
     }
   }
-
   guardarNuevaCategoria() {
     if (this.formNuevaCategoria.invalid) {
       console.error('Formulario de categoría inválido');
@@ -230,6 +229,21 @@ export class ModalComponent implements OnInit{
 
     console.log('Nueva categoría creada:', nuevaCategoria);
   }
+  removeCategoria(i: number){
+    this.categoriasF.removeAt(i);
+  }
+
+  //Logica Imagenes
+  addNewImagen() {
+    const imagenForm = this.formBuilder.group({
+      url: ['', Validators.required] // Cada imagen tendrá una URL
+    });
+    this.imagenesF.push(imagenForm);
+  }
+
+  removeImagen(index: number) {
+    this.imagenesF.removeAt(index);
+  }
 
   private cargarSerie() {
     if (this.idSerie){
@@ -261,5 +275,18 @@ export class ModalComponent implements OnInit{
     } else {
       this.formSerie.reset();
     }
+  }
+  private cargarCategorias() {
+    this.data.getCategorias().subscribe({
+      next: value => {
+        this.categorias = value.data;
+      },
+      error: err => {
+        console.error(err);
+      },
+      complete: () => {
+        console.log('Categorias cargadas ' + this.categorias.length);
+      }
+    })
   }
 }

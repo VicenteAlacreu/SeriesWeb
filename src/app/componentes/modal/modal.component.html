@@ -36,13 +36,36 @@
           <label for="fechaEmision">
             Fecha Emision</label>
         </div>
-        <div class="form-floating mb-3">
-          <input formControlName="imagenes"
-                 type="text" class="form-control"
-                 id="imagenes"
-                 placeholder="Imagen">
-          <label for="imagenes">
-            Imagenes</label>
+        <div formArrayName="imagenes">
+          @for (img of imagenesF.controls; track $index) {
+            <div [formGroupName]="$index" class="form-floating mb-3">
+              <div class="row">
+                <div class="col-md-8">
+                  <input formControlName="url"
+                         type="text"
+                         class="form-control"
+                         placeholder="URL de la imagen">
+                  <label>URL de la Imagen</label>
+                </div>
+                <div class="col-md-2">
+                  <button type="button"
+                          class="btn bg-danger text-light"
+                          (click)="removeImagen($index)">
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Botón para agregar una nueva imagen -->
+        <div class="d-flex justify-content-between mb-3">
+          <button type="button"
+                  class="btn btn-primary"
+                  (click)="addNewImagen()">
+            Agregar Imagen
+          </button>
         </div>
         <div formArrayName="categorias">
           @for (cat of categoriasF.controls; track $index) {

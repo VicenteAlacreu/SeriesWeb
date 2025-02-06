@@ -31,6 +31,7 @@ export class ModalComponent implements OnInit{
   //servicios
   private readonly data: SeriesService = inject(SeriesService);
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
+  private readonly router: Router = inject(Router);
 
   //Variables externas
   @Input({required: true}) editar!: boolean;
@@ -122,7 +123,6 @@ export class ModalComponent implements OnInit{
 
     const formValue = this.formSerie.getRawValue();
 
-
     formValue.categorias = formValue.categorias.map((cat: any) => ({
       nombre: cat.nombre,
       imagen: cat.imagen
@@ -144,6 +144,7 @@ export class ModalComponent implements OnInit{
         complete: () => {
           console.log('Updated');
           this.activeModal.dismiss();
+          this.router.navigateByUrl("/inicio")
         },
         error: err => {
           console.error('Error al actualizar:', err);
@@ -157,6 +158,7 @@ export class ModalComponent implements OnInit{
         complete: () => {
           console.log('Serie añadida');
           this.activeModal.dismiss();
+          this.router.navigateByUrl("/inicio")
         },
         error: err => {
           console.error('Error al añadir:', err);
@@ -240,7 +242,6 @@ export class ModalComponent implements OnInit{
     });
     this.imagenesF.push(imagenForm);
   }
-
   removeImagen(index: number) {
     this.imagenesF.removeAt(index);
   }
@@ -256,6 +257,7 @@ export class ModalComponent implements OnInit{
 
           const formato = `${anio}-${mes}-${dia}`;
           value.data.fechaEmision = formato;
+
           this.formSerie.patchValue(value.data);
 
           const data = value.data.categorias;

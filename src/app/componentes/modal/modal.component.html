@@ -1,14 +1,14 @@
 <div class="modal-dialog">
   <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="miModalLabel">
+    <div class="modal-header bg-dark">
+      <h5 class="modal-title text-light" id="miModalLabel">
         {{ editar ? 'Editar Serie' : 'Añadir Serie' }}</h5>
       <button type="button"
               class="btn-close" (click)="activeModal.dismiss()"
               aria-label="Close"></button>
 
     </div>
-    <div class="modal-body">
+    <div class="modal-body bg-dark">
 
       <form [formGroup]="formSerie" (ngSubmit)="onSubmit()">
 
@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-md-2">
                   <button type="button"
-                          class="btn bg-danger text-light"
+                          class="btn btn-outline-danger"
                           (click)="removeImagen($index)">
                     Eliminar
                   </button>
@@ -62,7 +62,7 @@
         <!-- Botón para agregar una nueva imagen -->
         <div class="d-flex justify-content-between mb-3">
           <button type="button"
-                  class="btn btn-primary"
+                  class="btn btn-outline-info"
                   (click)="addNewImagen()">
             Agregar Imagen
           </button>
@@ -85,7 +85,7 @@
                 </div>
                 <div class="col-md-2">
                   <button type="button"
-                          class="btn bg-danger text-light"
+                          class="btn btn-outline-danger"
                           (click)="removeCategoria($index)">
                     Eliminar
                   </button>
@@ -95,10 +95,10 @@
           }
         </div>
         <div class="d-flex justify-content-between mb-3">
-          <button type="button" class="btn btn-primary" (click)="addCategoria()">
+          <button type="button" class="btn btn-outline-info" (click)="addCategoria()">
             Agregar categoría
           </button>
-          <button type="button" class="btn btn-secondary ms-2" (click)="showNewCategoryForm = !showNewCategoryForm">
+          <button type="button" class="btn btn-outline-info ms-2" (click)="showNewCategoryForm = !showNewCategoryForm">
             Nueva categoría
           </button>
         </div>
@@ -140,10 +140,10 @@
       </form>
 
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Cancelar
+    <div class="modal-footer bg-dark">
+      <button type="button" class="btn btn-danger" (click)="activeModal.dismiss()">Cancelar
       </button>
-      <button type="submit"  class="btn btn-primary" (click)="onSubmit()">{{editar? 'Guardar Cambios' : 'Añadir Serie'}} </button>
+      <button type="submit"  class="btn btn-success" (click)="onSubmit()">{{editar? 'Guardar Cambios' : 'Añadir Serie'}} </button>
     </div>
   </div>
 </div>

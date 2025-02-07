@@ -68,7 +68,7 @@
           </button>
         </div>
         <div formArrayName="categorias">
-          @for (cat of categoriasF.controls; track $index) {
+          @for (cat of categoriasF.controls; track trackByCategoriaId($index, cat)) {
             <div [formGroupName]="$index" class="form-floating">
               <div class="row">
                 <div class="col-md-8">
@@ -77,7 +77,7 @@
                           (change)="onCategoryChange($index)"
                           formControlName="selectedCategory">
                     <option [ngValue]="null" disabled>Selecciona una categoría</option>
-                    @for (option of categorias; track option._id) {
+                    @for (option of categorias; track option.nombre) {
                       <option [ngValue]="option._id">{{ option.nombre }}</option>
                     }
                   </select>

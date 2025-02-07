@@ -109,6 +109,7 @@ export class ModalComponent implements OnInit{
   onSubmit() {
     if (this.formSerie.invalid) {
       console.error('Formulario Inválido');
+      this.formSerie.getRawValue()
 
       // Imprime los errores de cada control
       Object.keys(this.formSerie.controls).forEach(key => {
@@ -125,7 +126,8 @@ export class ModalComponent implements OnInit{
 
     formValue.categorias = formValue.categorias.map((cat: any) => ({
       nombre: cat.nombre,
-      imagen: cat.imagen
+      imagen: cat.imagen,
+      _id: cat._id
     }));
 
 
@@ -147,7 +149,7 @@ export class ModalComponent implements OnInit{
           this.router.navigateByUrl("/inicio")
         },
         error: err => {
-          console.error('Error al actualizar:', err);
+          console.error('Error al actualizar:', err.message);
         }
       });
     } else {
@@ -161,7 +163,7 @@ export class ModalComponent implements OnInit{
           this.router.navigateByUrl("/inicio")
         },
         error: err => {
-          console.error('Error al añadir:', err);
+          console.error('Error al añadir:', err.message);
         }
       });
     }
@@ -175,6 +177,7 @@ export class ModalComponent implements OnInit{
       imagen: ['', Validators.required],
       selectedCategory: [null, Validators.required]
     });
+
     this.categoriasF.push(categoriaForm);
   }
   onCategoryChange(index: number) {
@@ -234,6 +237,9 @@ export class ModalComponent implements OnInit{
   removeCategoria(i: number){
     this.categoriasF.removeAt(i);
   }
+  trackByCategoriaId(index: number, categoria: any): string {
+    return categoria._id || index.toString();  // Utiliza el _id como clave si existe
+  }
 
   //Logica Imagenes
   addNewImagen() {
@@ -279,9 +285,17 @@ export class ModalComponent implements OnInit{
     }
   }
   private cargarCategorias() {
+    this.categorias = [];
     this.data.getCategorias().subscribe({
       next: value => {
-        this.categorias = value.data;
+        const nombresUnicos = new Set<string>();
+        this.categorias = value.data.filter((categoria: Categoria) => {
+          if (!nombresUnicos.has(categoria.nombre)) {
+            nombresUnicos.add(categoria.nombre);
+            return true; // Mantener la categoría
+          }
+          return false; // Descartar la categoría duplicada
+        });
       },
       error: err => {
         console.error(err);
